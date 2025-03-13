@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}
+  My Tennis Club - List of all members
+{% endblock %}
+
+
+{% block content %}
+    {% load static %}
+    {% comment %} <div class="h-screen flex items-center justify-center bg-[url('C:/studyAbroad/Project/DS Project1/Django_App/myenv/BHP/myApp/repository/background.jpeg')] 
+    bg-cover bg-center relative"> {% endcomment %}
+
+    <div class="h-screen flex items-center justify-center bg-[url('{% static "images/background.jpeg" %}')] 
+    bg-cover bg-center relative">
+
+        {% comment %} Blue overlay with blur  {% endcomment %}
+        <div class="absolute inset-0 bg-blue-900/40 backdrop-blur-md"></div>
+
+        {% comment %} inner div {% endcomment %}
+        <div class="relative shadow-lg rounded-lg p-8 w-96 bg-blue-100 bg-opacity-10">
+            <h1 class="text-2xl font-bold text-center mb-4 text-green-300">Bangalore House Prediction</h1>
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-yellow-200">Area (sqft):</label>
+                    {% comment %} {{ form.area }} {% endcomment %}
+                    <input type="number" name="area" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" required placeholder="Ex: 1400 Sq. Ft" value="{{ request.POST.area }}">
+                </div>
+                {% csrf_token %}
+                <div>
+                    <label class="block text-yellow-200">BHK:</label>
+                    {% comment %} {{ form.bhk }} {% endcomment %}
+                    <input type="number" name="bhk" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" required placeholder="Ex: 3" value="{{ request.POST.bhk }}">
+                </div>
+                {% csrf_token %}
+                <div>
+                    <label class="block text-yellow-200">Bathrooms:</label>
+                    {% comment %} {{ form.bathrooms }} {% endcomment %}
+                    <input type="number" name="bath" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" required placeholder="Ex: 3" value="{{ request.POST.bath }}">
+                </div>
+                {% csrf_token %}
+                <div>
+                    <label class="block text-yellow-200">Location:</label>
+                    {% comment %} {{ form.location }} {% endcomment %}
+                    <select id="location" name="location" class="w-full px-4 py-2 border rounded-lg">
+                    {% for loc in locations %}
+                        {% comment %} <option value="{{ loc }}">{{ loc }}</option> {% endcomment %}
+                        <option value="{{ loc }}" {% if request.POST.location == loc %} selected {% endif %}>{{ loc }}</option>
+                    {% endfor %}
+            </select>    
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md">Predict</button>
+            </form>
+            
+            {% if price %}
+            <div class="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md text-center">
+                <h2 class="text-lg font-semibold">Predicted Price: ₹{{ price }} Lakhs</h2>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% comment %} 
+{% extends "base.html" %}
+
+{% block title %}Home Price Predictor{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold mb-4 text-center">Predict House Price</h2>
+    
+    <form id="priceForm" class="space-y-4">
+        <div>
+            <label class="block text-gray-700">Location:</label>
+            <select id="location" name="location" class="w-full px-4 py-2 border rounded-lg">
+                {% for loc in locations %}
+                    <option value="{{ loc }}">{{ loc }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-gray-700">Area (sqft):</label>
+            <input type="number" id="sqft" name="sqft" class="w-full px-4 py-2 border rounded-lg" required>
+        </div>
+
+        <div>
+            <label class="block text-gray-700">BHK:</label>
+            <input type="number" id="bhk" name="bhk" class="w-full px-4 py-2 border rounded-lg" required>
+        </div>
+
+        <div>
+            <label class="block text-gray-700">Bath:</label>
+            <input type="number" id="bath" name="bath" class="w-full px-4 py-2 border rounded-lg" required>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Predict</button>
+    </form>
+
+    <h3 class="text-lg font-semibold mt-4 text-center">Estimated Price: <span id="price" class="text-blue-600"></span> Lakhs</h3>
+</div>
+
+<script>
+    document.getElementById("priceForm").onsubmit = function(e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+
+        fetch("/predict/", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("price").innerText = data.estimated_price;
+        });
+    };
+</script>
+{% endblock %}
+
+ {% endcomment %}
